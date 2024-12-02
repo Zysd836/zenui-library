@@ -111,20 +111,10 @@ import ZenUIHeroDocsPage from "./Pages/ZenUIHeroDocsPage.jsx";
 import TimerPage from "./Pages/Components/Navigation/TimerPage.jsx";
 import ShortcutGeneratorPage from "./Pages/ShortcutGeneratorPage.jsx";
 
-
-const App = () => {
-    const [isCookie, setIsCookie] = useState(false)
+const MemeImage = () => {
     const [cursorPosition, setCursorPosition] = useState({x: 0, y: 0});
     const [isMemeVisible, setIsMemeVisible] = useState(false)
 
-    let Title = document.title;
-    window.addEventListener('blur', () => {
-        document.title = 'Get more components 😍';
-    })
-
-    window.addEventListener('focus', () => {
-        document.title = Title;
-    })
     //
     // useEffect(() => {
     //     const handleRightClick = (event) => {
@@ -165,19 +155,47 @@ const App = () => {
             y: event.clientY + window.scrollY
         });
     });
+    return (
+        <img 
+        src='/rightClickMeme.gif'
+        alt='meme' style={{
+            left: cursorPosition.x + 'px',
+            top: cursorPosition.y + 'px',
+            transform: 'translate(-50%, -50%)',
+            pointerEvents: 'none',
+        }}
+        className={`${isMemeVisible ? 'block' : 'hidden'} z-[3000] absolute rounded-full boxShadow w-[150px] h-[150px] transition-all shadow-md object-cover`}
+        />
+    )
+}
+const App = () => {
+    const [isCookie, setIsCookie] = useState(false)
+
+    let Title = document.title;
+    
+    useEffect(() => {
+        const handleBlur = () => {
+            document.title = 'Get more components 😍';
+        }
+        window.addEventListener('blur', handleBlur)
+        return () => {
+            window.removeEventListener('blur', handleBlur)
+        }
+    }, [])
+
+    useEffect(() => {
+        const handleFocus = () => {
+            document.title = Title;
+        }
+        window.addEventListener('focus', handleFocus)
+        return () => {
+            window.removeEventListener('focus', handleFocus)
+        }
+    }, [])
 
     return (
         <>
-
-            <img src='/rightClickMeme.gif' alt='meme' style={{
-                left: cursorPosition.x + 'px',
-                top: cursorPosition.y + 'px',
-                transform: 'translate(-50%, -50%)',
-                pointerEvents: 'none',
-            }}
-                 className={`${isMemeVisible ? 'block' : 'hidden'} z-[3000] absolute rounded-full boxShadow w-[150px] h-[150px] transition-all shadow-md object-cover`}/>
-
-
+            <MemeImage/>
             {/* all routes */}
             <Routes>
                 <Route path="/" element={<HomePage/>}/>
